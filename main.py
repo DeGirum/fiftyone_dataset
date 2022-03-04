@@ -1,6 +1,6 @@
 import os
-from tkinter.messagebox import NO
-os.system("rm -r ~/.fiftyone")
+if os.path.isdir('~/.fiftyone'):
+    os.system("rm -r ~/.fiftyone")
 
 import fiftyone as fo
 import fiftyone.zoo as foz
