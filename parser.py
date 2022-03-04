@@ -35,7 +35,7 @@ def parser_arguments():
     parser.add_argument('--remove-nonoverlap', required=False, action='store_true',
                         help="example: eye and face")
 
-    parser.add_argument('--max-samples', required=False, type=int, default=1e6,
+    parser.add_argument('--max-samples', required=False, type=int, default=None,
                         metavar="integer number",
                         help='Optional limit on number of images to download')
 
