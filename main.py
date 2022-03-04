@@ -1,56 +1,53 @@
+import os
+from tkinter.messagebox import NO
+os.system("rm -r ~/.fiftyone")
+
 import fiftyone as fo
 import fiftyone.zoo as foz
 from fiftyone import ViewField as F
-from pyparsing import And
+from parser import parser_arguments
+from utils import remove_nonoverlap_imgs_labels, gen_export_name
 
-# dataset = foz.download_zoo_dataset(
-#     "open-images-v6",
-#     split=None,
-#     splits=None,
-#     dataset_dir='./datasets/OIDv6',
-#     overwrite=False,
-#     cleanup=True,
-#     label_types=["detections"],
-#     classes = ["Burrito", "Cheese", "Popcorn"],
-# )
+if __name__ == '__main__':
 
-dataset_dir='./datasets/OIDv6'
-classes = ["Human eye", "Human face"]
+    args = parser_arguments()
 
-dataset = foz.load_zoo_dataset(
-    "open-images-v6",
-    split="validation",
-    dataset_dir=dataset_dir,
-    label_types=["detections"],
-    classes = classes,
-    dataset_name="open-images-human",
-    download_if_necessary=True
-)
-
-label_field = "detections"  # for example
-
-import fiftyone as fo
-
-export_dir = "./yolov5-face-eye-dataset3"
-
-# The splits to export
-splits = ["validation"]
-
-
-# The dataset or view to export
-# We assume the dataset uses sample tags to encode the splits to export
-# Export the splits
-
-filter = F("label").is_in([classes[0]]) & F("label").is_in([classes[1]])
-
-for split in splits:
-    split_view = dataset.filter_labels(feild='detections', filter=filter )
-    split_view.export(
-        export_dir=export_dir,
-        dataset_type=fo.types.YOLOv5Dataset,
-        label_field=label_field,
-        split=split,
-        classes=classes,
+    export_name = gen_export_name(args.classes) if args.export_name == None else args.export_name
+    ####
+    # download or loading the dataset
+    dataset = foz.load_zoo_dataset(
+        args.dataset,
+        splits=args.splits,
+        dataset_dir=args.dataset_dir,
+        label_types=args.label_types,
+        classes = args.classes,
+        dataset_name=export_name,
+        download_if_necessary=True,
+        max_samples=args.max_samples,
+        seed=args.seed,
     )
+    ####
+    # exporting to a new dataset
+    if (args.dataset_format == 'yolov5'):
+        dataset_type = fo.types.YOLOv5Dataset
+    elif (args.dataset_format == 'coco'):
+        dataset_type = fo.types.COCODetectionDataset
 
-a=2
+    export_path = args.export_dir
+    export_path = os.path.join(args.export_dir, export_name)
+
+    filter = F("label").is_in(args.classes)
+    for field in args.label_types:
+        for split in args.splits:
+            split_view = dataset.filter_labels(field=field, filter=filter )
+            split_view.export(
+                export_dir=export_path,
+                dataset_type=dataset_type,
+                label_field=field,
+                split=split,
+                classes=args.classes,
+            )
+
+    if (args.remove_nonoverlap):
+        remove_nonoverlap_imgs_labels(export_path, args.classes.__len__())
+

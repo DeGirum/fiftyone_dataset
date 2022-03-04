@@ -8,9 +8,14 @@
             "name": "Python: Current File",
             "type": "python",
             "request": "launch",
-            "program": "${file}",
+            "program": "${workspaceFolder}/main.py",
+            "args": [
+                "--classes", "Cat", "Dog",
+                "--splits", "validation",
+                "--max-samples", "100"
+            ],
             "console": "integratedTerminal",
-            "justMyCode": false
+            "justMyCode": true
         }
     ]
 }
