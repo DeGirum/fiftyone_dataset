@@ -1,4 +1,5 @@
 import os
+from re import S
 if os.path.isdir('~/.fiftyone'):
     os.system("rm -r ~/.fiftyone")
 
@@ -15,8 +16,9 @@ if __name__ == '__main__':
     export_name = gen_export_name(args.classes) if args.export_name == None else args.export_name
     ####
     # download or loading the dataset
+    dataset = {}
     for split, max_samples in zip(args.splits, args.max_samples):
-        dataset = foz.load_zoo_dataset(
+        dataset[split] = foz.load_zoo_dataset(
             args.dataset,
             split=split,
             dataset_dir=args.dataset_dir,
@@ -40,7 +42,7 @@ if __name__ == '__main__':
     filter = F("label").is_in(args.classes)
     for field in args.label_types:
         for split in args.splits:
-            split_view = dataset.filter_labels(field=field, filter=filter )
+            split_view = dataset[split].filter_labels(field=field, filter=filter )
             split_view.export(
                 export_dir=export_path,
                 dataset_type=dataset_type,
