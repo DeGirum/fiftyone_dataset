@@ -16,19 +16,19 @@ if __name__ == '__main__':
     export_name = gen_export_name(args.classes) if args.export_name == None else args.export_name
     ####
     # download or loading the dataset
-    # dataset = {}
-    # for split, max_samples in zip(args.splits, args.max_samples):
-    dataset = foz.load_zoo_dataset(
-        args.dataset,
-        splits=args.splits,
-        dataset_dir=args.dataset_dir,
-        label_types=args.label_types,
-        classes = args.classes,
-        dataset_name=export_name,
-        download_if_necessary=True,
-        # max_samples=max_samples,
-        # seed=args.seed,
-    )
+    dataset = {}
+    for split, max_samples in zip(args.splits, args.max_samples):
+        dataset[split] = foz.load_zoo_dataset(
+            args.dataset,
+            split=split,
+            dataset_dir=args.dataset_dir,
+            label_types=args.label_types,
+            classes = args.classes,
+            dataset_name=(export_name + split),
+            download_if_necessary=True,
+            max_samples=max_samples,
+            seed=args.seed,
+        )
     ####
     # exporting to a new dataset
     if (args.dataset_format == 'yolov5'):
@@ -39,11 +39,12 @@ if __name__ == '__main__':
     export_path = args.export_dir
     export_path = os.path.join(args.export_dir, export_name)
 
+    split_view = {}
     filter = F("label").is_in(args.classes)
     for field in args.label_types:
         for split in args.splits:
-            split_view = dataset.filter_labels(field=field, filter=filter )
-            split_view.export(
+            split_view[split] = dataset[split].filter_labels(field=field, filter=filter )
+            split_view[split].export(
                 export_dir=export_path,
                 dataset_type=dataset_type,
                 label_field=field,
