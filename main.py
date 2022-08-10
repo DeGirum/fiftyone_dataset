@@ -9,6 +9,8 @@ from fiftyone import ViewField as F
 from parser import parser_arguments
 from utils import remove_nonoverlap_imgs_labels, gen_export_name
 
+from dataset_yaml_manipulate import correct_dataset_yaml
+
 if __name__ == '__main__':
 
     args = parser_arguments()
@@ -35,7 +37,7 @@ if __name__ == '__main__':
         dataset_type = fo.types.YOLOv5Dataset
     elif (args.dataset_format == 'coco'):
         dataset_type = fo.types.COCODetectionDataset
-
+    
     export_path = args.export_dir
     export_path = os.path.join(args.export_dir, export_name)
 
@@ -55,3 +57,6 @@ if __name__ == '__main__':
     if (args.remove_nonoverlap):
         remove_nonoverlap_imgs_labels(export_path, args.classes.__len__())
 
+    out_yaml_abs_path = correct_dataset_yaml(args.export_dir, export_name)
+    print( 'The modified yaml file is located at:')
+    print( out_yaml_abs_path )
