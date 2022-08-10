@@ -1,5 +1,5 @@
 import os
-from re import S
+
 if os.path.isdir('~/.fiftyone'):
     os.system("rm -r ~/.fiftyone")
 

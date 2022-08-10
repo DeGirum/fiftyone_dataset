@@ -1,0 +1,10 @@
+# pip install -r requirements.txt
+
+# Base ----------------------------------------
+argparse
+fiftyone
+glob2
+pathlib
+numpy
+PyYAML
+
