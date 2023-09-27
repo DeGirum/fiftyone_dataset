@@ -7,10 +7,10 @@ def parser_arguments():
     '''
     parser = argparse.ArgumentParser(description='DeGirum Open Image Dataset Downloader')
 
-    parser.add_argument('--dataset', required=False, default="open-images-v6",
+    parser.add_argument('--dataset', required=False, default="open-images-v7",
                         help='public datasets')
 
-    parser.add_argument('--dataset-dir', required=False, default="./datasets/OIDv6",
+    parser.add_argument('--dataset-dir', required=False, default="./datasets/OIDv7",
                         help='path to the downloaded datasets')
 
     parser.add_argument('--export-dir', required=False, default="exported_dataset",
