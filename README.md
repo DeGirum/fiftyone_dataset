@@ -1,4 +1,4 @@
-# dataset_51
+# fiftyone_dataset
 Downloading, loading and manipulating datasets using fiftyone
 
 ## Quick Start Examples
