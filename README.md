@@ -4,7 +4,7 @@ Downloading, loading and manipulating datasets using fiftyone
 ## Quick Start Examples
 
 ```bash
-$ git clone https://github.com/khatami-mehrdad/dataset_51.git
+$ git clone https://github.com/degirum/dataset_51.git
 $ cd dataset_51
 $ pip install -r requirements.txt
 
