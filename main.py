@@ -15,6 +15,12 @@ if __name__ == '__main__':
 
     args = parser_arguments()
 
+    # make full path
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    if not os.path.isabs(args.dataset_dir):
+        args.dataset_dir = os.path.join(script_dir, args.dataset_dir)
+    
+    fo.config.dataset_zoo_dir = args.dataset_dir
     export_name = gen_export_name(args.classes) if args.export_name == None else args.export_name
     ####
     # download or loading the dataset
@@ -23,10 +29,9 @@ if __name__ == '__main__':
         dataset[split] = foz.load_zoo_dataset(
             args.dataset,
             split=split,
-            dataset_dir=args.dataset_dir,
             label_types=args.label_types,
-            classes = args.classes,
-            dataset_name=(export_name + split),
+            classes=args.classes,
+            dataset_name=export_name + split,
             download_if_necessary=True,
             max_samples=max_samples,
             seed=args.seed,
@@ -42,7 +47,7 @@ if __name__ == '__main__':
     export_path = os.path.join(args.export_dir, export_name)
 
     split_view = {}
-    filter = F("label").is_in(args.classes)
+    filter = (F("label").is_in(args.classes)) & (F("attributes.IsGroupOf") == False)
     for split in args.splits:
         split_view[split] = dataset[split].filter_labels(field='ground_truth', filter=filter )
         split_view[split].export(

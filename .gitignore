@@ -2,3 +2,4 @@ datasets/*
 exported_dataset/*
 __pycache__/*
 .vscode/*
+.venv/*

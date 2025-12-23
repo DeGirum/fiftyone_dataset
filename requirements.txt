@@ -7,4 +7,6 @@ glob2
 pathlib
 numpy
 PyYAML
+Pillow
+tqdm
 
