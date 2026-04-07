@@ -1,7 +1,9 @@
 import os
+import shutil
 
-if os.path.isdir('~/.fiftyone'):
-    os.system("rm -r ~/.fiftyone")
+_fiftyone_home = os.path.expanduser("~/.fiftyone")
+if os.path.isdir(_fiftyone_home):
+    shutil.rmtree(_fiftyone_home)
 
 import fiftyone as fo
 import fiftyone.zoo as foz

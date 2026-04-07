@@ -1,7 +1,9 @@
 import os
+import shutil
 
-if os.path.isdir('~/.fiftyone'):
-    os.system("rm -r ~/.fiftyone")
+_fiftyone_home = os.path.expanduser("~/.fiftyone")
+if os.path.isdir(_fiftyone_home):
+    shutil.rmtree(_fiftyone_home)
 
 import fiftyone as fo
 import fiftyone.zoo as foz
@@ -47,7 +49,7 @@ if __name__ == '__main__':
     export_path = os.path.join(args.export_dir, export_name)
 
     split_view = {}
-    filter = (F("label").is_in(args.classes)) & (F("attributes.IsGroupOf") == False)
+    filter = (F("label").is_in(args.classes)) & (F("IsGroupOf") == False)
     for split in args.splits:
         split_view[split] = dataset[split].filter_labels(field='ground_truth', filter=filter )
         split_view[split].export(
